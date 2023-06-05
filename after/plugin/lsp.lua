@@ -138,6 +138,7 @@ local function config(_config)
 	}, _config or {})
 end
 
+-- language servers setup
 require("lspconfig").pyright.setup(config())
 
 -- Symbols Outline Plugin Config

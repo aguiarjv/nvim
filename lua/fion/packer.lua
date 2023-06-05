@@ -9,7 +9,13 @@ return require('packer').startup(function(use)
 
   use("sbdchd/neoformat") -- Need to install formatters
 
-  use("TimUntersberger/neogit")
+  -- nvim tree
+  use {
+  'nvim-tree/nvim-tree.lua',
+  requires = {
+    'nvim-tree/nvim-web-devicons', -- optional
+  }
+ }
 
   -- Telescope
   use("nvim-lua/plenary.nvim")
@@ -67,5 +73,6 @@ return require('packer').startup(function(use)
   -- Git
   -- use("dinhhuy258/git.nvim")
   -- use("lewis6991/gitsigns.nvim")
+  use("TimUntersberger/neogit")
 
 end)
