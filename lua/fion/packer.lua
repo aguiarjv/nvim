@@ -17,6 +17,12 @@ return require('packer').startup(function(use)
   }
  }
 
+ -- mason
+ use {
+    "williamboman/mason.nvim",
+    run = ":MasonUpdate" -- :MasonUpdate updates registry contents
+ }
+
   -- Telescope
   use("nvim-lua/plenary.nvim")
   use("nvim-lua/popup.nvim")
@@ -73,6 +79,6 @@ return require('packer').startup(function(use)
   -- Git
   -- use("dinhhuy258/git.nvim")
   -- use("lewis6991/gitsigns.nvim")
-  use("TimUntersberger/neogit")
+use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
 
 end)

@@ -34,7 +34,8 @@ vnoremap("<leader>d", "\"_d")
 vnoremap("<leader>d", "\"_d")
 
 -- Open file tree as split and resizes it
-nnoremap("<leader>pv", ":tabnew v<bar> :Ex <bar> :vertical resize 30<CR>")
+-- nnoremap("<leader>pv", ":tabnew v<bar> :Ex <bar> :vertical resize 30<CR>")
+nnoremap("<leader>pv", ":NvimTreeToggle<cr>")
 
 -- Move between split windows
 nnoremap("<leader>h", ":wincmd h<CR>")
@@ -55,5 +56,10 @@ nnoremap("<leader>fh", function() require('telescope.builtin').help_tags() end)
 
 nnoremap("<leader>fs", function() require('telescope.builtin').grep_string({ search = vim.fn.input("Grep for > ")}) end)
 nnoremap("<leader>fw", function() require('telescope.builtin').grep_string({ search = vim.fn.expand("<cword>")}) end)
+
+-- Neogit
+nnoremap("<leader>gs", ":Neogit<cr>")
+
+nnoremap("<leader>ga", "<cmd>!git fetch --all<CR>")
 
 
