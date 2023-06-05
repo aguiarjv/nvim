@@ -70,6 +70,10 @@ return require("packer").startup(function(use)
 	use("nvim-treesitter/playground")
 	use("romgrk/nvim-treesitter-context")
 
+	-- Commenting
+	use("JoosepAlviste/nvim-ts-context-commentstring")
+	use("numToStr/Comment.nvim")
+
 	-- Debugging
 	use("mfussenegger/nvim-dap")
 	use("mfussenegger/nvim-dap-python")
