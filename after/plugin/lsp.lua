@@ -10,7 +10,6 @@ cmp.setup({
 		["<C-d>"] = cmp.mapping.scroll_docs(-4),
 		["<C-u>"] = cmp.mapping.scroll_docs(4),
 		["<C-e>"] = cmp.mapping.abort(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
 		["<C-y>"] = cmp.mapping(
 			cmp.mapping.confirm({
 				behavior = cmp.ConfirmBehavior.Insert,
@@ -123,9 +122,6 @@ local function config(_config)
 			end)
 			vim.keymap.set("n", "<leader>vws", function()
 				vim.lsp.buf.workspace_symbol()
-			end)
-			vim.keymap.set("n", "<leader>vd", function()
-				vim.diagnostic.open_float()
 			end)
 			vim.keymap.set("n", "[d", function()
 				vim.diagnostic.goto_next()

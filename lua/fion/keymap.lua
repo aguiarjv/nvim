@@ -69,7 +69,7 @@ vim.keymap.set("n", "<leader>fw", function()
 	require("telescope.builtin").grep_string({ search = vim.fn.expand("<cword>") })
 end)
 
--- Neogit
+-- Git
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 
 vim.keymap.set("n", "<leader>ga", "<cmd>!git fetch --all<CR>")
