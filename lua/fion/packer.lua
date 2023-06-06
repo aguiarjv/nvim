@@ -52,6 +52,7 @@ return require("packer").startup(function(use)
 	-- Colorschemes
 	use("folke/tokyonight.nvim")
 	use("gruvbox-community/gruvbox")
+	use({ "rose-pine/neovim", as = "rose-pine" })
 
 	use({
 		"nvim-lualine/lualine.nvim",
@@ -82,9 +83,7 @@ return require("packer").startup(function(use)
 	use("theHamsta/nvim-dap-virtual-text")
 
 	-- Git
-	-- use("dinhhuy258/git.nvim")
-	-- use("lewis6991/gitsigns.nvim")
-	use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
+	use("tpope/vim-fugitive")
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins

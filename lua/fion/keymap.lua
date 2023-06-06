@@ -1,79 +1,75 @@
-local Remap = require("fion.remap")
+vim.keymap.set("i", "<C-c>", "<esc>")
 
-local nnoremap = Remap.nnoremap
-local vnoremap = Remap.vnoremap
-local inoremap = Remap.inoremap
-local xnoremap = Remap.xnoremap
-local nmap = Remap.nmap
+-- Moving visual selection up and down
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
-inoremap("<C-c>", "<esc>")
+vim.keymap.set("n", "Y", "yg$")
 
-vnoremap("J", ":m '>+1<CR>gv=gv")
-vnoremap("K", ":m '<-2<CR>gv=gv")
-
-nnoremap("Y", "yg$")
-nnoremap("n", "nzzzv")
-nnoremap("N", "Nzzzv")
-nnoremap("J", "mzJ`z")
-nnoremap("<C-d>", "<C-d>zz")
-nnoremap("<C-u>", "<C-u>zz")
+-- Keeps the cursor in the middle while moving
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 -- Replaces currently selected text with default register without yanking it
-xnoremap("<leader>p", '"_dP')
+vim.keymap.set("x", "<leader>p", '"_dP')
 
-nnoremap("<leader>y", '"+y')
-vnoremap("<leader>y", '"+y')
-nmap("<leader>Y", '"+Y')
+-- Yanks to your clipboard
+vim.keymap.set("n", "<leader>y", '"+y')
+vim.keymap.set("v", "<leader>y", '"+y')
+vim.keymap.set("n", "<leader>Y", '"+Y', { noremap = false })
 
-nnoremap("x", '"_x')
+vim.keymap.set("n", "x", '"_x')
 
 -- Deletes without saving to register
-nnoremap("<leader>d", '"_d')
-vnoremap("<leader>d", '"_d')
+vim.keymap.set("n", "<leader>d", '"_d')
+vim.keymap.set("v", "<leader>d", '"_d')
 
-vnoremap("<leader>d", '"_d')
+vim.keymap.set("v", "<leader>d", '"_d')
 
 -- Open file tree as split and resizes it
--- nnoremap("<leader>pv", ":tabnew v<bar> :Ex <bar> :vertical resize 30<CR>")
-nnoremap("<leader>pe", ":NvimTreeToggle<cr>")
+-- vim.keymap.set("n", "<leader>pv", ":tabnew v<bar> :Ex <bar> :vertical resize 30<CR>")
+vim.keymap.set("n", "<leader>pe", ":NvimTreeToggle<cr>")
 
 -- Move between split windows
-nnoremap("<leader>h", ":wincmd h<CR>")
-nnoremap("<leader>j", ":wincmd j<CR>")
-nnoremap("<leader>k", ":wincmd k<CR>")
-nnoremap("<leader>l", ":wincmd l<CR>")
+vim.keymap.set("n", "<leader>h", ":wincmd h<CR>")
+vim.keymap.set("n", "<leader>j", ":wincmd j<CR>")
+vim.keymap.set("n", "<leader>k", ":wincmd k<CR>")
+vim.keymap.set("n", "<leader>l", ":wincmd l<CR>")
 
 -- Telescope
-nnoremap("<C-p>", function()
+vim.keymap.set("n", "<C-p>", function()
 	require("telescope.builtin").git_files()
 end)
 
-nnoremap("<leader>ft", function()
+vim.keymap.set("n", "<leader>ft", function()
 	require("telescope-tabs").list_tabs()
 end)
 
-nnoremap("<leader>ff", function()
+vim.keymap.set("n", "<leader>ff", function()
 	require("telescope.builtin").find_files()
 end)
-nnoremap("<leader>fg", function()
+vim.keymap.set("n", "<leader>fg", function()
 	require("telescope.builtin").live_grep()
 end)
-nnoremap("<leader>fb", function()
+vim.keymap.set("n", "<leader>fb", function()
 	require("telescope.builtin").buffers()
 end)
 
-nnoremap("<leader>fh", function()
+vim.keymap.set("n", "<leader>fh", function()
 	require("telescope.builtin").help_tags()
 end)
 
-nnoremap("<leader>fs", function()
+vim.keymap.set("n", "<leader>fs", function()
 	require("telescope.builtin").grep_string({ search = vim.fn.input("Grep for > ") })
 end)
-nnoremap("<leader>fw", function()
+vim.keymap.set("n", "<leader>fw", function()
 	require("telescope.builtin").grep_string({ search = vim.fn.expand("<cword>") })
 end)
 
 -- Neogit
-nnoremap("<leader>gs", ":Neogit<cr>")
+vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 
-nnoremap("<leader>ga", "<cmd>!git fetch --all<CR>")
+vim.keymap.set("n", "<leader>ga", "<cmd>!git fetch --all<CR>")
