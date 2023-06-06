@@ -44,13 +44,13 @@ Reference: [Telescope](https://github.com/nvim-telescope/telescope.nvim)
 ## LSP
 References: [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) and [nvim-lsp](https://github.com/neovim/nvim-lspconfig)
 
--(cmp) **CTRL + n**: select next item
--(cmp) **CTRL + p**: select previous item
--(cmp) **CTRL + d**: scroll docs (-4)
--(cmp) **CTRL + u**: scroll docs (+4)
--(cmp) **CTRL + e**: abort
--(cmp) **CTRL + y**: confirm
--(cmp) **CTRL + space**: cmp.mapping.complete() (check reference)
+- (cmp) **CTRL + n**: select next item
+- (cmp) **CTRL + p**: select previous item
+- (cmp) **CTRL + d**: scroll docs (-4)
+- (cmp) **CTRL + u**: scroll docs (+4)
+- (cmp) **CTRL + e**: abort
+- (cmp) **CTRL + y**: confirm
+- (cmp) **CTRL + space**: cmp.mapping.complete() (check reference)
 <br />
 
 - **gd**: go to definition
