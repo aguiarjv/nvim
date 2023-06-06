@@ -164,6 +164,11 @@ _G.packer_plugins = {
     path = "/home/victor/.local/share/nvim/site/pack/packer/start/neogit",
     url = "https://github.com/TimUntersberger/neogit"
   },
+  ["nvim-autopairs"] = {
+    loaded = true,
+    path = "/home/victor/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
+    url = "https://github.com/windwp/nvim-autopairs"
+  },
   ["nvim-cmp"] = {
     loaded = true,
     path = "/home/victor/.local/share/nvim/site/pack/packer/start/nvim-cmp",

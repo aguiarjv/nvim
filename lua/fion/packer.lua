@@ -74,6 +74,9 @@ return require("packer").startup(function(use)
 	use("JoosepAlviste/nvim-ts-context-commentstring")
 	use("numToStr/Comment.nvim")
 
+	-- Auto pairs
+	use("windwp/nvim-autopairs")
+
 	-- Debugging
 	use("mfussenegger/nvim-dap")
 	use("mfussenegger/nvim-dap-python")
@@ -84,4 +87,10 @@ return require("packer").startup(function(use)
 	-- use("dinhhuy258/git.nvim")
 	-- use("lewis6991/gitsigns.nvim")
 	use({ "TimUntersberger/neogit", requires = "nvim-lua/plenary.nvim" })
+
+	-- Automatically set up your configuration after cloning packer.nvim
+	-- Put this at the end after all plugins
+	if PACKER_BOOTSTRAP then
+		require("packer").sync()
+	end
 end)
