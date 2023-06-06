@@ -70,7 +70,7 @@ References: [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) and [nvim-lsp](https
 Reference: [Comment.nvim](https://github.com/numToStr/Comment.nvim)
 
 - **gcc**: toggle comment on the line under the cursor
-- (visual mode)**gc**: toggle comment on selected lines
+- (visual mode) **gc**: toggle comment on selected lines
 
 ## Debugging
 Reference: [nvim-dap](https://github.com/mfussenegger/nvim-dap)
