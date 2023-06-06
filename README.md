@@ -4,16 +4,17 @@
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
 - [packer](https://github.com/wbthomason/packer.nvim)
 
-### test3
-#### test4
+### Keymaps
+My mappings can be found in this repo.
 
-to be updated
+### Some issues
 
+[mason](https://github.com/williamboman/mason.nvim) may have a few problems installing some packages.
+The problem I had while installing packages for python was solved by installing python3-ven. <br />
 
+[cmp_tabnine](https://github.com/tzachar/cmp-tabnine) some times is not installed properly. You have to execute the install.sh file.
+It has to be executed in the folder that packer.nvim installed cmp_tabnine. To find it you can run the following command from your home folder:
 
-needs to install python3-venv
-needs to install packer nvim
-needs to install nvim
-needs to install ripgrep
-cmp_tabine install file (find . -name cmp_tabnine)
-
+```
+$ find . -name cmp_tabnine
+```
