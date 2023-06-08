@@ -160,6 +160,11 @@ end
 
 -- language servers setup
 require("lspconfig").pyright.setup(config())
+require("lspconfig").lua_ls.setup(config())
+require("lspconfig").cssls.setup(config())
+require("lspconfig").emmet_ls.setup(config())
+require("lspconfig").html.setup(config())
+require("lspconfig").tsserver.setup(config())
 
 -- Symbols Outline Plugin Config
 local opts = {
