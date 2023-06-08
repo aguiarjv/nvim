@@ -3,6 +3,7 @@
 - [neovim](https://github.com/neovim/neovim)
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
 - [packer](https://github.com/wbthomason/packer.nvim)
+- Create the following directory ([undotree](https://github.com/mbbill/undotree)) <code>$HOME/.vim/undodir/</code>
 
 ### Keymaps
 For reference my mappings can be found in the [nvim-keymaps.md](./nvim-keymaps.md)
