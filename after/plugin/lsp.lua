@@ -165,6 +165,7 @@ require("lspconfig").cssls.setup(config())
 require("lspconfig").emmet_ls.setup(config())
 require("lspconfig").html.setup(config())
 require("lspconfig").tsserver.setup(config())
+require("lspconfig").gopls.setup(config())
 
 -- Symbols Outline Plugin Config
 local opts = {
