@@ -17,6 +17,9 @@ return require("packer").startup(function(use)
 		},
 	})
 
+	-- indent scope
+	use("lukas-reineke/indent-blankline.nvim")
+
 	-- mason portable package manager
 	use("williamboman/mason.nvim")
 	use("williamboman/mason-lspconfig.nvim")
