@@ -32,6 +32,9 @@ return require("packer").startup(function(use)
 
 	use("LukasPietzschmann/telescope-tabs")
 
+	-- Linter
+	use("mfussenegger/nvim-lint")
+
 	-- LSP and Auto Completion
 	use("neovim/nvim-lspconfig")
 
