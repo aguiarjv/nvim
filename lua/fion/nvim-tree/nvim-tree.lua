@@ -11,19 +11,19 @@ vim.opt.termguicolors = true
 -- following options are the default
 -- each of these are documented in `:help nvim-tree.OPTION_NAME`
 
-local status_ok, nvim_tree = pcall(require, "nvim-tree")
-if not status_ok then
-	return
-end
-
-local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
-if not config_status_ok then
-	return
-end
+--[[ local status_ok, nvim_tree = pcall(require, "nvim-tree") ]]
+--[[ if not status_ok then ]]
+--[[ 	return ]]
+--[[ end ]]
+--[[]]
+--[[ local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config") ]]
+--[[ if not config_status_ok then ]]
+--[[ 	return ]]
+--[[ end ]]
 
 local my_on_attach = require("fion.nvim-tree.nvim-tree-on-attach")
 
-nvim_tree.setup({
+require("nvim-tree").setup({
 	on_attach = my_on_attach,
 	disable_netrw = true,
 	hijack_netrw = true,
@@ -55,7 +55,6 @@ nvim_tree.setup({
 	},
 	view = {
 		width = 30,
-		hide_root_folder = false,
 		side = "left",
 		number = false,
 		relativenumber = false,
@@ -70,6 +69,7 @@ nvim_tree.setup({
 	renderer = {
 		highlight_git = true,
 		root_folder_modifier = ":t",
+		root_folder_label = "false",
 		icons = {
 			show = {
 				file = true,
