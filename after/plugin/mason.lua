@@ -5,5 +5,5 @@ require("mason-lspconfig").setup({
 
 -- Needs to install python3-venv to install python formatter and debugger
 require("mason-tool-installer").setup({
-	ensure_installed = { "black", "stylua", "debugpy", "prettier", "flake8", "eslint_d" },
+	ensure_installed = { "autopep8", "stylua", "debugpy", "prettier", "flake8", "eslint_d" },
 })

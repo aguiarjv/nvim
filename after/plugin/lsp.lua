@@ -53,11 +53,11 @@ cmp.setup({
 	},
 	sources = {
 		{ name = "gh_issues" },
-		{ name = "cmp_tabnine" },
 
 		{ name = "nvim_lua" },
 
 		{ name = "nvim_lsp" },
+		{ name = "cmp_tabnine" },
 		{ name = "path", keyword_length = 3 },
 		{ name = "luasnip" },
 		{ name = "buffer", keyword_length = 5 },
