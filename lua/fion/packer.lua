@@ -82,6 +82,7 @@ return require("packer").startup(function(use)
 
 	-- Auto pairs
 	use("windwp/nvim-autopairs")
+	use("windwp/nvim-ts-autotag")
 
 	-- Debugging
 	use("mfussenegger/nvim-dap")

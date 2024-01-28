@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 vim.opt.guicursor = ""
 
 vim.opt.cursorline = true
@@ -32,6 +33,8 @@ vim.opt.autoindent = true
 vim.opt.smartindent = true
 
 vim.opt.termguicolors = true
+
+vim.opt.re = 0
 
 -- More space for displaying messages
 vim.opt.cmdheight = 1
