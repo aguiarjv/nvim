@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 vim.g.tokyonight_transparent_sidebar = true
 vim.g.tokyonight_transparent = true
 
@@ -8,9 +9,9 @@ vim.g.gruvbox_sign_column = "none"
 vim.opt.background = "dark"
 
 require("rose-pine").setup({ disable_italics = true })
-vim.cmd.colorscheme("rose-pine")
+-- vim.cmd.colorscheme("rose-pine")
 
--- vim.cmd.colorscheme("tokyonight-moon")
+vim.cmd.colorscheme("tokyonight-moon")
 -- vim.cmd.colorscheme("gruvbox")
 
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
