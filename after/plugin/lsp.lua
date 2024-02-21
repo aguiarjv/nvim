@@ -161,7 +161,15 @@ end
 
 -- language servers setup
 --[[ require("lspconfig").pyright.setup(config()) ]]
-require("lspconfig").pylsp.setup(config())
+require("lspconfig").pylsp.setup(config({
+	settings = { pylsp = {
+		plugins = {
+			pycodestyle = {
+				maxLineLength = 100,
+			},
+		},
+	} },
+}))
 require("lspconfig").lua_ls.setup(config())
 require("lspconfig").cssls.setup(config())
 require("lspconfig").emmet_ls.setup(config())
