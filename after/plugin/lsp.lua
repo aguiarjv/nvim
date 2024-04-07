@@ -84,20 +84,12 @@ cmp.setup({
 			},
 		}),
 	},
-
-	experimental = {
-		-- I like the new menu better! Nice work hrsh7th
-		native_menu = false,
-
-		-- Let's play with this for a day or two
-		ghost_text = true,
-	},
 })
 
 -- Cmp Tabnine Plugin
 local tabnine = require("cmp_tabnine.config")
 tabnine:setup({
-	max_lines = 1000,
+	max_lines = 500,
 	max_num_results = 20,
 	sort = true,
 	run_on_every_keystroke = true,
@@ -170,6 +162,7 @@ require("lspconfig").pylsp.setup(config({
 		},
 	} },
 }))
+
 require("lspconfig").lua_ls.setup(config())
 require("lspconfig").cssls.setup(config())
 require("lspconfig").emmet_ls.setup(config())
