@@ -23,7 +23,6 @@ require("nvim-treesitter.configs").setup({
 		"vimdoc",
 		"xml",
 		"yaml",
-		"help",
 		"cmake",
 	},
 	sync_install = false,
