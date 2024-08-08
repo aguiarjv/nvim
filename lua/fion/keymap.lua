@@ -33,6 +33,13 @@ vim.keymap.set("v", "<leader>d", '"_d')
 -- vim.keymap.set("n", "<leader>pv", ":tabnew v<bar> :Ex <bar> :vertical resize 30<CR>")
 vim.keymap.set("n", "<leader>pe", ":NvimTreeToggle<cr>")
 
+-- Create New Tab
+vim.keymap.set("n", "<leader>st", ":tabnew<CR>")
+
+-- Split Windows
+vim.keymap.set("n", "<leader>ss", ":split<CR>")
+vim.keymap.set("n", "<leader>sv", ":vsplit <CR>")
+
 -- Move between split windows
 vim.keymap.set("n", "<leader>h", ":wincmd h<CR>")
 vim.keymap.set("n", "<leader>j", ":wincmd j<CR>")
