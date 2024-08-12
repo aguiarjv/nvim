@@ -37,8 +37,8 @@ vim.keymap.set("n", "<leader>pe", ":NvimTreeToggle<cr>")
 vim.keymap.set("n", "<leader>st", ":tabnew<CR>")
 
 -- Split Windows
-vim.keymap.set("n", "<leader>ss", ":split<CR>")
-vim.keymap.set("n", "<leader>sv", ":vsplit <CR>")
+vim.keymap.set("n", "<leader>sb", ":split<CR> <BAR> :wincmd j<CR>")
+vim.keymap.set("n", "<leader>sv", ":vsplit <CR> <BAR> :wincmd l<CR>")
 
 -- Move between split windows
 vim.keymap.set("n", "<leader>h", ":wincmd h<CR>")
