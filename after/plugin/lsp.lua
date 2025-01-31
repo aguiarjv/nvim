@@ -167,7 +167,7 @@ require("lspconfig").lua_ls.setup(config())
 require("lspconfig").cssls.setup(config())
 require("lspconfig").emmet_ls.setup(config())
 require("lspconfig").html.setup(config())
-require("lspconfig").tsserver.setup(config())
+require("lspconfig").ts_ls.setup(config())
 require("lspconfig").gopls.setup(config())
 require("lspconfig").tailwindcss.setup(config())
 

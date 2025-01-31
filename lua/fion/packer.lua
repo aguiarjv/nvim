@@ -48,6 +48,8 @@ return require("packer").startup(function(use)
 
 	use("onsails/lspkind.nvim")
 
+	use("mfussenegger/nvim-jdtls")
+
 	-- Snippets
 	use("saadparwaiz1/cmp_luasnip")
 	use("L3MON4D3/LuaSnip")
@@ -87,7 +89,7 @@ return require("packer").startup(function(use)
 	-- Debugging
 	use("mfussenegger/nvim-dap")
 	use("mfussenegger/nvim-dap-python")
-	use("rcarriga/nvim-dap-ui")
+	use({ "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } })
 	use("theHamsta/nvim-dap-virtual-text")
 
 	-- Git
