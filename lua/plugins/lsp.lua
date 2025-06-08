@@ -1,21 +1,34 @@
 return {
     "neovim/nvim-lspconfig",
     opts = {
+        format = { timeout_ms = 30000 },
+        default_format_opts = { timeout_ms = 30000 },
         servers = {
+            eslint = {
+                enabled = true,
+            },
             vtsls = {
                 enabled = false,
             },
+            ts_ls = {
+                enabled = false,
+            },
             tsserver = {
-                enabled = true,
+                enabled = false,
+                init_options = {
+                    preferences = {
+                        disableSuggestions = false,
+                    },
+                },
                 settings = {
                     typescript = {
                         inlayHints = {
-                            includeInlayEnumMemberValueHints = true,
-                            includeInlayFunctionLikeReturnTypeHints = true,
-                            includeInlayFunctionParameterTypeHints = true,
-                            includeInlayParameterNameHints = "literals",
+                            includeInlayEnumMemberValueHints = false,
+                            includeInlayFunctionParameterTypeHints = false,
+                            includeInlayFunctionLikeReturnTypeHints = false,
+                            includeInlayParameterNameHints = "none",
                             includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                            includeInlayPropertyDeclarationTypeHints = true,
+                            includeInlayPropertyDeclarationTypeHints = false,
                             includeInlayVariableTypeHints = false,
                             includeInlayVariableTypeHintsWhenTypeMatchesName = false,
                         },
@@ -23,6 +36,9 @@ return {
                     completions = {
                         completeFunctionCalls = true,
                     },
+                },
+                flags = {
+                    debounce_text_changes = 300,
                 },
                 keys = {
                     {
@@ -56,7 +72,7 @@ return {
         },
         setup = {
             tsserver = function()
-                return false
+                return true
             end,
             vtsls = function()
                 return true

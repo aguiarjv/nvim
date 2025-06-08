@@ -11,8 +11,11 @@ return {
             scroll = {
                 enabled = false,
             },
-            animte = {
+            animate = {
                 enabled = false,
+            },
+            notifier = {
+                enabled = true,
             },
         },
     },

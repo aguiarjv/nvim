@@ -36,3 +36,22 @@ vim.opt.smartindent = true
 vim.opt.termguicolors = true
 
 vim.opt.re = 0
+
+vim.opt.cmdheight = 0
+
+vim.g.matchparen_timeout = 2
+vim.g.matchparen_insert_timeout = 2
+
+vim.opt.syntax = "off"
+vim.o.foldenable = false
+
+vim.o.spell = false
+
+vim.g.snacks_animate = false
+
+vim.opt.foldmethod = "manual" -- Use manual folding instead of treesitter
+vim.opt.foldlevel = 99
+vim.opt.conceallevel = 0 -- Disable concealing which can slow things down
+vim.opt.synmaxcol = 300 -- Limit syntax highlighting to first 300 columns
+
+vim.lsp.set_log_level("off")
