@@ -17,6 +17,9 @@ return {
             notifier = {
                 enabled = true,
             },
+            picker = {
+                ui_select = true,
+            },
         },
     },
 }
