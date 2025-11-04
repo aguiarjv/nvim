@@ -49,9 +49,4 @@ vim.o.spell = false
 
 vim.g.snacks_animate = false
 
-vim.opt.foldmethod = "manual" -- Use manual folding instead of treesitter
-vim.opt.foldlevel = 99
-vim.opt.conceallevel = 0 -- Disable concealing which can slow things down
 vim.opt.synmaxcol = 300 -- Limit syntax highlighting to first 300 columns
-
-vim.lsp.set_log_level("off")

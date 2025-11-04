@@ -12,7 +12,7 @@ return {
                 "prettierd",
                 "css-lsp",
                 "emmet-ls",
-                "gopls",
+                -- "gopls",
                 "html-lsp",
                 "jdtls",
                 "lua-language-server",
