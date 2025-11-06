@@ -37,7 +37,7 @@ return {
                 --    looks like something i would have added while i was floundering
                 init_options = { clangdFileStatus = true },
 
-                filetypes = { "c" },
+                filetypes = { "c", "cpp" },
             },
             pyright = true,
             ruff = { manual_install = true },

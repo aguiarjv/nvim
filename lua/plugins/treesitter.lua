@@ -7,13 +7,15 @@ return {
         local TS = require("nvim-treesitter")
         TS.install({
             "c",
+            "cpp",
             "javascript",
             "python",
             "tsx",
             "typescript",
             --
-            "diff",
             "html",
+            "css",
+            "diff",
             "bash",
             "jsdoc",
             "json",
