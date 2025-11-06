@@ -32,9 +32,10 @@ return {
                 },
             },
             clangd = {
-                -- cmd = { "clangd", unpack(require("custom.clangd").flags) },
-                -- TODO: Could include cmd, but not sure those were all relevant flags.
-                --    looks like something i would have added while i was floundering
+                cmd = {
+                    "clangd",
+                    "--fallback-style=webkit",
+                },
                 init_options = { clangdFileStatus = true },
 
                 filetypes = { "c", "cpp" },
