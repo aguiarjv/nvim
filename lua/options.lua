@@ -62,6 +62,8 @@ opt.foldtext = ""
 opt.formatoptions:remove("o")
 opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg = "rg --vimgrep"
+opt.hlsearch = false -- highligh previous searched pattern
+opt.incsearch = true
 opt.ignorecase = true -- Ignore case
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.jumpoptions = "view"
