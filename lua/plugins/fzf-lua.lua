@@ -61,6 +61,21 @@ return {
         { "<leader>sR", "<cmd>FzfLua resume<cr>", desc = "Resume" },
         { "<leader>sq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix List" },
         {
+            "<leader>sw",
+            function()
+                require("fzf-lua").grep_cword()
+            end,
+            desc = "Word",
+        },
+        {
+            "<leader>sw",
+            function()
+                require("fzf-lua").grep_visual()
+            end,
+            desc = "Selection",
+            mode = "x",
+        },
+        {
             "<leader>ss",
             function()
                 require("fzf-lua").lsp_document_symbols({
