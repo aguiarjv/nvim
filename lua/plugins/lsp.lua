@@ -136,38 +136,20 @@ return {
                 vim.keymap.del("n", "grt")
 
                 local fzf_lua = require("fzf-lua")
-                local wk = require("which-key")
-
                 vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
-                wk.add({
-                    { "gd", fzf_lua.lsp_definitions, desc = "Go to definition", mode = "n", nowait = true },
-                    { "gr", fzf_lua.lsp_references, desc = "Go to references", mode = "n" },
-                    { "gD", vim.lsp.buf.declaration, desc = "Go to declaration", mode = "n" },
-                    { "gT", vim.lsp.buf.type_definition, desc = "Go to type definition", mode = "n" },
-                    { "K", vim.lsp.buf.hover, desc = "Hover", mode = "n" },
-                    { "<leader>cr", vim.lsp.buf.rename, desc = "Rename", mode = "n" },
-                    { "<leader>ca", vim.lsp.buf.rename, desc = "Code action", mode = "n" },
-                    {
-                        "<leader>wd",
-                        function()
-                            fzf_lua.diagnostics_document({ root_dir = true })
-                        end,
-                        desc = "Diagnostics document",
-                        mode = "n",
-                    },
-                })
-                -- vim.keymap.set("n", "gd", fzf_lua.lsp_definitions, { buffer = 0 })
-                -- vim.keymap.set("n", "gr", fzf_lua.lsp_references, { buffer = 0 })
-                -- vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = 0 })
-                -- vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { buffer = 0 })
-                -- vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
 
-                -- vim.keymap.set("n", "<space>cr", vim.lsp.buf.rename, { buffer = 0 })
-                -- vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, { buffer = 0 })
-                -- vim.keymap.set("n", "<space>wd", fzf_lua.lsp_document_symbols, { buffer = 0 })
-                -- vim.keymap.set("n", "<space>ww", function()
-                --     fzf_lua.diagnostics_document({ root_dir = true })
-                -- end, { buffer = 0 })
+                vim.keymap.set("n", "gd", fzf_lua.lsp_definitions, { desc = "Go to definition", buffer = 0 })
+                vim.keymap.set("n", "gr", fzf_lua.lsp_references, { desc = "Go to references", buffer = 0 })
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration", buffer = 0 })
+                vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { desc = "Go to type definition", buffer = 0 })
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover", buffer = 0 })
+
+                vim.keymap.set("n", "<space>cr", vim.lsp.buf.rename, { desc = "Rename", buffer = 0 })
+                vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, { desc = "Code action", buffer = 0 })
+                vim.keymap.set("n", "<space>ww", fzf_lua.lsp_document_symbols, { buffer = 0 })
+                vim.keymap.set("n", "<space>wd", function()
+                    fzf_lua.diagnostics_document({ root_dir = true })
+                end, { desc = "Diagnostics document", buffer = 0 })
 
                 -- Override server capabilities
                 if settings.server_capabilities then
