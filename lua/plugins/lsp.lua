@@ -129,17 +129,18 @@ return {
                 end
 
                 -- Deleting Global default keymaps
-                vim.keymap.del("n", "gra")
-                vim.keymap.del("n", "gri")
-                vim.keymap.del("n", "grn")
-                vim.keymap.del("n", "grr")
-                vim.keymap.del("n", "grt")
+                local bufnr = args.buf
+                pcall(vim.keymap.del, "n", "gra", { buffer = bufnr })
+                pcall(vim.keymap.del, "n", "gri", { buffer = bufnr })
+                pcall(vim.keymap.del, "n", "grn", { buffer = bufnr })
+                pcall(vim.keymap.del, "n", "grr", { buffer = bufnr })
+                pcall(vim.keymap.del, "n", "grt", { buffer = bufnr })
 
                 local fzf_lua = require("fzf-lua")
                 vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
 
                 vim.keymap.set("n", "gd", fzf_lua.lsp_definitions, { desc = "Go to definition", buffer = 0 })
-                vim.keymap.set("n", "gr", fzf_lua.lsp_references, { desc = "Go to references", buffer = 0 })
+                vim.keymap.set("n", "gR", fzf_lua.lsp_references, { desc = "Go to references", buffer = 0 })
                 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration", buffer = 0 })
                 vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { desc = "Go to type definition", buffer = 0 })
                 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover", buffer = 0 })
