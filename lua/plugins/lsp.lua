@@ -26,76 +26,7 @@ return {
         "b0o/SchemaStore.nvim",
     },
     config = function()
-        local servers = {
-            bashls = true,
-            lua_ls = {
-                cmd = { "lua-language-server" },
-                -- server_capabilities = {
-                --   semanticTokensProvider = vim.NIL,
-                -- },
-            },
-            jsonls = {
-                server_capabilities = {
-                    documentFormattingProvider = false,
-                },
-                settings = {
-                    json = {
-                        schemas = require("schemastore").json.schemas(),
-                        validate = { enable = true },
-                    },
-                },
-            },
-            clangd = {
-                cmd = {
-                    "clangd",
-                    "--fallback-style=webkit",
-                },
-                init_options = { clangdFileStatus = true },
-
-                filetypes = { "c", "cpp" },
-            },
-            pyright = true,
-            ruff = { manual_install = true },
-            vtsls = {
-                server_capabilities = {
-                    documentFormattingProvider = false,
-                },
-            },
-            tailwindcss = {
-                init_options = {
-                    userLanguages = {
-                        elixir = "phoenix-heex",
-                        eruby = "erb",
-                        heex = "phoenix-heex",
-                    },
-                },
-                filetypes = {
-                    "html",
-                    "css",
-                    "scss",
-                    "javascript",
-                    "javascriptreact",
-                    "typescript",
-                    "typescriptreact",
-                    "vue",
-                    "svelte",
-                    "ocaml.mlx",
-                },
-                settings = {
-                    tailwindCSS = {
-                        experimental = {
-                            classRegex = {
-                                [[class: "([^"]*)]],
-                                [[className="([^"]*)]],
-                            },
-                        },
-                        includeLanguages = {
-                            ["ocaml.mlx"] = "html",
-                        },
-                    },
-                },
-            },
-        }
+        local servers = require("lsp.servers-config")
 
         local servers_to_install = vim.tbl_filter(function(key)
             local t = servers[key]
@@ -110,7 +41,6 @@ return {
         local ensure_installed = {
             "stylua",
             "lua_ls",
-            "delve",
             -- "tailwind-language-server",
         }
 
