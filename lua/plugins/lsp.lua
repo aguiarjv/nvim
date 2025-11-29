@@ -46,6 +46,7 @@ return {
 
         vim.list_extend(ensure_installed, servers_to_install)
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+
         -- Configure and enable each LSP server
         for name, config in pairs(servers) do
             if config == true then
@@ -63,6 +64,7 @@ return {
             vim.lsp.enable(name)
         end
 
+        -- On attach
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("UserLspConfig", {}),
             callback = function(args)
@@ -109,6 +111,38 @@ return {
                     end
                 end
             end,
+        })
+
+        -- Diagnostics config
+        local diagnostics_icons = require("config.icons").diagnostics
+        vim.diagnostic.config({
+            -- virtual_lines = true,
+            -- severity_sort = true,
+            -- float = {
+            --     border = "rounded",
+            --     source = true,
+            -- },
+            underline = true,
+            update_in_insert = false,
+            virtual_text = {
+                spacing = 4,
+                source = "if_many",
+                prefix = "●",
+                -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+                -- prefix = "icons",
+            },
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = diagnostics_icons.Error,
+                    [vim.diagnostic.severity.WARN] = diagnostics_icons.Warn,
+                    [vim.diagnostic.severity.INFO] = diagnostics_icons.Info,
+                    [vim.diagnostic.severity.HINT] = diagnostics_icons.Hint,
+                },
+                numhl = {
+                    [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+                    [vim.diagnostic.severity.WARN] = "WarningMsg",
+                },
+            },
         })
     end,
 }
