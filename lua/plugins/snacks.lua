@@ -12,6 +12,21 @@ return {
                 },
             },
             scope = { enabled = true },
+            explorer = {},
+            picker = {
+                sources = {
+                    explorer = {},
+                },
+            },
+        },
+        keys = {
+            {
+                "<leader>e",
+                function()
+                    require("snacks").explorer()
+                end,
+                desc = "File tree",
+            },
         },
     },
 }
