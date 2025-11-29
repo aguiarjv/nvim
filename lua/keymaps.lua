@@ -26,7 +26,7 @@ vim.keymap.set("n", "x", '"_x')
 
 -- Open file tree as split and resizes it
 -- vim.keymap.set("n", "<leader>pv", ":tabnew v<bar> :Ex <bar> :vertical resize 30<CR>")
-vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<cr>", { desc = "File tree" })
+vim.keymap.set("n", "<leader>e", ":22Lexplore<cr>", { desc = "File tree" })
 
 -- buffers
 vim.keymap.set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
