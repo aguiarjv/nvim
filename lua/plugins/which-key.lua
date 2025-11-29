@@ -19,6 +19,7 @@ return {
                     { "<leader>s", group = "search" },
                     { "<leader>u", group = "ui" },
                     { "<leader>x", group = "diagnostics/quickfix" },
+                    { "gr", group = "LSP actions" },
                     { "[", group = "prev" },
                     { "]", group = "next" },
                     { "g", group = "goto" },
