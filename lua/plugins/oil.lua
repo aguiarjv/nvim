@@ -11,7 +11,6 @@ return {
             end
 
             require("oil").setup({
-                default_file_explorer = false,
                 columns = { "icon" },
                 keymaps = {
                     ["<C-h>"] = false,
