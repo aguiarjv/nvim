@@ -1,8 +1,8 @@
 return {
     dependencies = {
-        require("dap.clangd").dependencies,
+        require("dap.configs.clangd").dependencies,
     },
     setup = function()
-        require("dap.clangd").setup()
+        require("dap.configs.clangd").setup()
     end,
 }
