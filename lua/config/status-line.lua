@@ -48,7 +48,7 @@ end
 function M.git()
     local branch = get_git_branch(0)
     if branch == "" then
-        return "[No git branch]"
+        return " " .. "[No git branch]" .. " "
     end
     return "  " .. branch .. " "
 end
@@ -226,15 +226,16 @@ function M.setup()
     vim.o.statusline = table.concat({
         " %{v:lua.require'config.status-line'.mode()} ",
         "",
-        "%{v:lua.require'config.status-line'.git()}",
-        "",
         "%{v:lua.require'config.status-line'.filename()}",
+        "",
+        "%{v:lua.require'config.status-line'.git()}",
         -- "",
         -- " %{v:lua.require'config.status-line'.filetype()} ",
-        "",
-        "%{v:lua.require'config.status-line'.lsp()}",
         "%=",
+        "%{v:lua.require'config.status-line'.lsp()}",
+        "•",
         "%{v:lua.require'config.status-line'.filesize()}",
+        "•",
         " %l:%c %P ",
     })
 end
