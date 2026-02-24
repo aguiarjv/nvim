@@ -1,19 +1,72 @@
-local cached_branch = ""
-local last_check = 0
-local function git_branch()
-    local now = vim.loop.now()
-    if now - last_check > 15000 then -- Check every 15 seconds
-        cached_branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
-        last_check = now
+local M = {}
+
+local branch_cache = {}
+
+local function get_git_branch(bufnr)
+    bufnr = bufnr or 0
+
+    local cwd = vim.api.nvim_buf_get_name(bufnr)
+    if cwd == "" then
+        return ""
     end
-    if cached_branch ~= "" then
-        return " \u{e725} " .. cached_branch .. " " -- nf-dev-git_branch
+
+    local dir = vim.fs.dirname(cwd)
+    local git_dir = vim.fs.find(".git", {
+        path = dir,
+        upward = true,
+        type = "directory",
+    })[1]
+
+    if not git_dir then
+        branch_cache[bufnr] = ""
+        return ""
     end
-    return ""
+
+    if branch_cache[bufnr] then
+        return branch_cache[bufnr]
+    end
+
+    local head_path = git_dir .. "/HEAD"
+    local f = io.open(head_path, "r")
+    if not f then
+        return ""
+    end
+
+    local head = f:read("*l")
+    f:close()
+
+    local branch = head and head:match("ref: refs/heads/(.+)") or ""
+    branch_cache[bufnr] = branch or ""
+
+    return branch_cache[bufnr]
 end
 
--- File type with Nerd Font icon
-local function file_type()
+-- =============================
+-- Mode
+-- =============================
+
+function M.mode()
+    local mode = vim.api.nvim_get_mode().mode
+
+    local modes = {
+        n = "  NORMAL",
+        i = "  INSERT",
+        v = " 󰈈 VISUAL",
+        V = " 󰈈 V-LINE",
+        ["\22"] = " 󰈈 V-BLOCK",
+        c = "  COMMAND",
+        R = "  REPLACE",
+        t = "  TERMINAL",
+    }
+
+    return modes[mode] or (" " .. mode)
+end
+
+-- =============================
+-- File Type
+-- =============================
+
+function M.filetype()
     local ft = vim.bo.filetype
     local icons = {
         lua = "\u{e620} ", -- nf-dev-lua
@@ -62,80 +115,115 @@ local function file_type()
     return ((icons[ft] or " \u{f15b} ") .. ft)
 end
 
--- File size with Nerd Font icon
-local function file_size()
-    local size = vim.fn.getfsize(vim.fn.expand("%"))
-    if size < 0 then
+-- =============================
+-- File Size (buffer-based)
+-- =============================
+
+function M.filesize()
+    local line_count = vim.api.nvim_buf_line_count(0)
+    local size = vim.api.nvim_buf_get_offset(0, line_count)
+
+    if not size or size <= 0 then
         return ""
     end
-    local size_str
+
     if size < 1024 then
-        size_str = size .. "B"
+        return string.format(" %dB ", size)
     elseif size < 1024 * 1024 then
-        size_str = string.format("%.1fK", size / 1024)
+        return string.format(" %.1fK ", size / 1024)
     else
-        size_str = string.format("%.1fM", size / 1024 / 1024)
+        return string.format(" %.1fM ", size / 1024 / 1024)
     end
-    return " \u{f016} " .. size_str .. " " -- nf-fa-file_o
 end
 
--- Mode indicators with Nerd Font icons
-local function mode_icon()
-    local mode = vim.fn.mode()
-    local modes = {
-        n = " \u{f121}  NORMAL",
-        i = " \u{f11c}  INSERT",
-        v = " \u{f0168} VISUAL",
-        V = " \u{f0168} V-LINE",
-        ["\22"] = " \u{f0168} V-BLOCK",
-        c = " \u{f120} COMMAND",
-        s = " \u{f0c5} SELECT",
-        S = " \u{f0c5} S-LINE",
-        ["\19"] = " \u{f0c5} S-BLOCK",
-        R = " \u{f044} REPLACE",
-        r = " \u{f044} REPLACE",
-        ["!"] = " \u{f489} SHELL",
-        t = " \u{f120} TERMINAL",
-    }
-    return modes[mode] or (" \u{f059} " .. mode)
+-- =============================
+-- Git Component
+-- =============================
+
+function M.git()
+    local branch = get_git_branch(0)
+    if branch == "" then
+        return ""
+    end
+    return "  " .. branch .. " "
 end
 
-_G.mode_icon = mode_icon
-_G.git_branch = git_branch
-_G.file_type = file_type
-_G.file_size = file_size
+-- =============================
+-- Setup
+-- =============================
+--
 
-vim.cmd([[
-  highlight StatusLineBold gui=bold cterm=bold
-]])
+local function get_hl(name)
+    return vim.api.nvim_get_hl(0, { name = name, link = false }) or {}
+end
 
--- Function to change statusline based on window focus
-local function setup_dynamic_statusline()
-    vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-        callback = function()
-            vim.opt_local.statusline = table.concat({
-                "  ",
-                "%#StatusLineBold#",
-                "%{v:lua.mode_icon()}",
-                "%#StatusLine#",
-                " \u{e0b1} %f %h%m%r", -- nf-pl-left_hard_divider
-                "%{v:lua.git_branch()}",
-                "\u{e0b1} ", -- nf-pl-left_hard_divider
-                "%{v:lua.file_type()} ",
-                "\u{e0b1} ", -- nf-pl-left_hard_divider
-                "%{v:lua.file_size()}",
-                "%=", -- Right-align everything after this
-                " \u{f017} %l:%c  %P ", -- nf-fa-clock_o for line/col
-            })
+local function set_statusline_colors()
+    local normal = get_hl("Normal")
+    local statusline = get_hl("StatusLine")
+    local statement = get_hl("Statement")
+    local string = get_hl("String")
+    local func = get_hl("Function")
+    local type_hl = get_hl("Type")
+
+    local bg = statusline.bg or normal.bg
+    local fg = statusline.fg or normal.fg
+
+    vim.api.nvim_set_hl(0, "SLMode", {
+        fg = bg,
+        bg = statement.fg,
+    })
+
+    vim.api.nvim_set_hl(0, "SLGit", {
+        fg = bg,
+        bg = string.fg,
+    })
+
+    vim.api.nvim_set_hl(0, "SLFile", {
+        fg = bg,
+        bg = func.fg,
+    })
+
+    vim.api.nvim_set_hl(0, "SLRight", {
+        fg = bg,
+        bg = type_hl.fg,
+    })
+
+    vim.api.nvim_set_hl(0, "SLFill", {
+        fg = fg,
+        bg = bg,
+    })
+end
+
+function M.setup()
+    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "DirChanged", "FocusGained" }, {
+        callback = function(args)
+            branch_cache[args.buf] = nil
         end,
     })
+
+    set_statusline_colors()
+
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = set_statusline_colors,
+    })
+
     vim.api.nvim_set_hl(0, "StatusLineBold", { bold = true })
 
-    vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-        callback = function()
-            vim.opt_local.statusline = "  %f %h%m%r \u{e0b1} %{v:lua.file_type()} %=  %l:%c   %P "
-        end,
+    vim.o.statusline = table.concat({
+        "%#SLFile#",
+        " %{v:lua.require'config.status-line'.mode()} ",
+        "",
+        " %f %h%m%r ",
+        "%#SLGit#",
+        "%{v:lua.require'config.status-line'.git()}",
+        "",
+        " %{v:lua.require'config.status-line'.filetype()} ",
+        "",
+        "%{v:lua.require'config.status-line'.filesize()}",
+        "%#SLFill#",
+        "%=",
+        " %l:%c %P ",
     })
 end
 
-setup_dynamic_statusline()
+return M
