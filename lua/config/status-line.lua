@@ -4,33 +4,24 @@ local M = {}
 -- Git Component
 -- =============================
 
-local branch_cache = {}
+local git_cache = {}
 
-local function get_git_branch(bufnr)
-    bufnr = bufnr or 0
-
-    local cwd = vim.api.nvim_buf_get_name(bufnr)
-    if cwd == "" then
+local function get_branch()
+    local file = vim.api.nvim_buf_get_name(0)
+    if file == "" then
         return ""
     end
 
-    local dir = vim.fs.dirname(cwd)
-    local git_dir = vim.fs.find(".git", {
-        path = dir,
-        upward = true,
-        type = "directory",
-    })[1]
-
-    if not git_dir then
-        branch_cache[bufnr] = ""
+    local root = vim.fs.root(file, ".git")
+    if not root then
         return ""
     end
 
-    if branch_cache[bufnr] then
-        return branch_cache[bufnr]
+    if git_cache[root] then
+        return git_cache[root]
     end
 
-    local head_path = git_dir .. "/HEAD"
+    local head_path = root .. "/.git/HEAD"
     local f = io.open(head_path, "r")
     if not f then
         return ""
@@ -39,16 +30,21 @@ local function get_git_branch(bufnr)
     local head = f:read("*l")
     f:close()
 
-    local branch = head and head:match("ref: refs/heads/(.+)") or ""
-    branch_cache[bufnr] = branch or ""
+    local branch
+    if head:match("^ref:") then
+        branch = head:match("refs/heads/(.+)")
+    else
+        branch = head:sub(1, 7) -- detached HEAD
+    end
 
-    return branch_cache[bufnr]
+    git_cache[root] = branch or ""
+    return git_cache[root]
 end
 
 function M.git()
-    local branch = get_git_branch(0)
+    local branch = get_branch()
     if branch == "" then
-        return " " .. "[No git branch]" .. " "
+        return " " .. "[No Git Branch]" .. " "
     end
     return "  " .. branch .. " "
 end
@@ -175,22 +171,60 @@ end
 -- LSP
 -- =============================
 
-local lsp_status = {
-    active = false,
-    name = "",
-}
-
 function M.lsp()
-    if lsp_status.active and lsp_status.name ~= "" then
-        return "  " .. lsp_status.name .. " "
-    end
-
     local clients = vim.lsp.get_clients({ bufnr = 0 })
-    if #clients > 0 then
-        return "  " .. clients[1].name .. " "
+    if #clients == 0 then
+        return ""
     end
 
-    return ""
+    local names = {}
+    for _, client in ipairs(clients) do
+        table.insert(names, client.name)
+    end
+
+    return "  " .. table.concat(names, ", ") .. " "
+end
+
+-- =============================
+-- Diagnostics Count (E/W/I/H)
+-- =============================
+
+function M.diagnostics()
+    local bufnr = 0
+
+    local d = vim.diagnostic.count(bufnr)
+
+    if not d then
+        return ""
+    end
+
+    local errors = d[vim.diagnostic.severity.ERROR] or 0
+    local warns = d[vim.diagnostic.severity.WARN] or 0
+    local infos = d[vim.diagnostic.severity.INFO] or 0
+    local hints = d[vim.diagnostic.severity.HINT] or 0
+
+    if errors + warns + infos + hints == 0 then
+        return ""
+    end
+
+    local parts = {}
+
+    table.insert(parts, "•")
+
+    if errors > 0 then
+        table.insert(parts, "%#DiagnosticError#  " .. errors .. "%*")
+    end
+    if warns > 0 then
+        table.insert(parts, "%#DiagnosticWarn#  " .. warns .. "%*")
+    end
+    if infos > 0 then
+        table.insert(parts, "%#DiagnosticInfo#  " .. infos .. "%*")
+    end
+    if hints > 0 then
+        table.insert(parts, "%#DiagnosticHint#  " .. hints .. "%*")
+    end
+
+    return table.concat(parts, "")
 end
 
 -- =============================
@@ -198,43 +232,29 @@ end
 -- =============================
 
 function M.setup()
-    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "DirChanged", "FocusGained" }, {
-        callback = function(args)
-            branch_cache[args.buf] = nil
-        end,
-    })
-
-    vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-            local client = vim.lsp.get_client_by_id(args.data.client_id)
-            if client then
-                lsp_status.active = true
-                lsp_status.name = client.name
-                vim.cmd("redrawstatus")
-            end
-        end,
-    })
-
-    vim.api.nvim_create_autocmd("LspDetach", {
+    vim.api.nvim_create_autocmd({ "DirChanged", "FocusGained" }, {
         callback = function()
-            lsp_status.active = false
-            lsp_status.name = ""
+            git_cache = {}
             vim.cmd("redrawstatus")
         end,
     })
 
+    -- Avoid multiple requires
+    _G.sl = M
+
     vim.o.statusline = table.concat({
-        " %{v:lua.require'config.status-line'.mode()} ",
+        " %{v:lua.sl.mode()} ",
         "",
-        "%{v:lua.require'config.status-line'.filename()}",
+        "%{v:lua.sl.filename()}",
         "",
-        "%{v:lua.require'config.status-line'.git()}",
+        "%{v:lua.sl.git()}",
+        "%{%v:lua.sl.diagnostics()%}",
         -- "",
-        -- " %{v:lua.require'config.status-line'.filetype()} ",
+        -- " %{v:lua.sl.filetype()} ",
         "%=",
-        "%{v:lua.require'config.status-line'.lsp()}",
+        "%{v:lua.sl.lsp()}",
         "•",
-        "%{v:lua.require'config.status-line'.filesize()}",
+        "%{v:lua.sl.filesize()}",
         "•",
         " %l:%c %P ",
     })
