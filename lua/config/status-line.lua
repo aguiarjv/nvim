@@ -7,38 +7,24 @@ local M = {}
 local git_cache = {}
 
 local function get_branch()
-    local file = vim.api.nvim_buf_get_name(0)
-    if file == "" then
+    local cwd = vim.loop.cwd()
+
+    if not cwd then
         return ""
     end
 
-    local root = vim.fs.root(file, ".git")
-    if not root then
+    if git_cache[cwd] then
+        return git_cache[cwd]
+    end
+
+    local result = vim.fn.systemlist("git branch --show-current")[1]
+
+    if vim.v.shell_error ~= 0 or not result or result == "" then
+        git_cache[cwd] = ""
         return ""
     end
 
-    if git_cache[root] then
-        return git_cache[root]
-    end
-
-    local head_path = root .. "/.git/HEAD"
-    local f = io.open(head_path, "r")
-    if not f then
-        return ""
-    end
-
-    local head = f:read("*l")
-    f:close()
-
-    local branch
-    if head:match("^ref:") then
-        branch = head:match("refs/heads/(.+)")
-    else
-        branch = head:sub(1, 7) -- detached HEAD
-    end
-
-    git_cache[root] = branch or ""
-    return git_cache[root]
+    return result
 end
 
 function M.git()
@@ -87,7 +73,7 @@ function M.filename()
     end
 
     if name == "" then
-        return " [No Name]"
+        return " [No Name] "
     end
 
     return " " .. vim.fn.fnamemodify(name, ":.") .. " "
