@@ -41,11 +41,12 @@ return {
         local ensure_installed = {
             "stylua",
             "lua_ls",
-            -- "tailwind-language-server",
         }
 
         vim.list_extend(ensure_installed, servers_to_install)
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+
+        local capabilities = require("lsp.capabilities").get()
 
         -- Configure and enable each LSP server
         for name, config in pairs(servers) do
@@ -53,20 +54,27 @@ return {
                 config = {}
             end
 
-            -- Only call vim.lsp.config if there are server-specific settings
-            if next(config) ~= nil then
-                -- Remove manual_install flag as it's not an LSP config field
-                local lsp_config = vim.tbl_deep_extend("force", {}, config)
-                lsp_config.manual_install = nil
-                vim.lsp.config(name, lsp_config)
-            end
+            -- Always using capabilities
+            local base_config = {
+                capabilities = capabilities,
+            }
 
-            vim.lsp.enable(name)
+            -- Extendind existing config
+            local lsp_config = vim.tbl_deep_extend("force", base_config, config or {})
+
+            -- Remove manual_install flag as it's not an LSP config field
+            lsp_config.manual_install = nil
+
+            vim.lsp.config(name, lsp_config)
+
+            if not vim.lsp.get_clients({ name = name })[1] then
+                vim.lsp.enable(name)
+            end
         end
 
         -- On attach
         vim.api.nvim_create_autocmd("LspAttach", {
-            group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+            group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
             callback = function(args)
                 local client = assert(vim.lsp.get_client_by_id(args.data.client_id), "must have valid client")
 
@@ -75,48 +83,29 @@ return {
                     settings = {}
                 end
 
-                -- Deleting Global default keymaps
-                local bufnr = args.buf
-                pcall(vim.keymap.del, "n", "gra", { buffer = bufnr })
-                pcall(vim.keymap.del, "n", "gri", { buffer = bufnr })
-                pcall(vim.keymap.del, "n", "grn", { buffer = bufnr })
-                pcall(vim.keymap.del, "n", "grr", { buffer = bufnr })
-                pcall(vim.keymap.del, "n", "grt", { buffer = bufnr })
-
-                local fzf_lua = require("fzf-lua")
-                vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
-
-                vim.keymap.set("n", "gd", fzf_lua.lsp_definitions, { desc = "Go to definition", buffer = 0 })
-                vim.keymap.set("n", "gR", fzf_lua.lsp_references, { desc = "Go to references", buffer = 0 })
-                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration", buffer = 0 })
-                vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { desc = "Go to type definition", buffer = 0 })
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover", buffer = 0 })
-
-                vim.keymap.set("n", "<space>cr", vim.lsp.buf.rename, { desc = "Rename", buffer = 0 })
-                vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, { desc = "Code action", buffer = 0 })
-                vim.keymap.set("n", "<space>ww", fzf_lua.lsp_document_symbols, { buffer = 0 })
-                vim.keymap.set("n", "<space>wd", function()
-                    fzf_lua.diagnostics_document({ root_dir = true })
-                end, { desc = "Diagnostics document", buffer = 0 })
+                -- Set keymaps
+                require("lsp.keymaps").on_attach(client, args.buf)
 
                 -- Override server capabilities
-                if settings.server_capabilities then
-                    for k, v in pairs(settings.server_capabilities) do
-                        if v == vim.NIL then
-                            ---@diagnostic disable-next-line: cast-local-type
-                            v = nil
-                        end
-
-                        client.server_capabilities[k] = v
-                    end
-                end
+                -- if settings.server_capabilities then
+                --     for k, v in pairs(settings.server_capabilities) do
+                --         if v == vim.NIL then
+                --             ---@diagnostic disable-next-line: cast-local-type
+                --             v = nil
+                --         end
+                --
+                --         client.server_capabilities[k] = v
+                --     end
+                -- end
             end,
         })
 
         -- Diagnostics config
         local diagnostics_icons = require("config.icons").diagnostics
         vim.diagnostic.config({
-            -- virtual_lines = true,
+            virtual_lines = {
+                current_line = true,
+            },
             -- severity_sort = true,
             -- float = {
             --     border = "rounded",
@@ -124,13 +113,14 @@ return {
             -- },
             underline = true,
             update_in_insert = false,
-            virtual_text = {
-                spacing = 4,
-                source = "if_many",
-                prefix = "●",
-                -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
-                -- prefix = "icons",
-            },
+            virtual_text = false,
+            -- virtual_text = {
+            --     spacing = 4,
+            --     source = "if_many",
+            --     prefix = "●",
+            --     -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+            --     -- prefix = "icons",
+            -- },
             signs = {
                 text = {
                     [vim.diagnostic.severity.ERROR] = diagnostics_icons.Error,

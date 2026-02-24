@@ -112,3 +112,11 @@ opt.wrap = false -- Disable line wrap
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
+
+-- Deleting LSP default keymaps
+local keys = { "gra", "gri", "grn", "grr", "grt", "gr" }
+
+for _, key in ipairs(keys) do
+    pcall(vim.keymap.del, "n", key)
+    pcall(vim.keymap.del, "x", key)
+end
