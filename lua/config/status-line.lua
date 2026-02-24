@@ -1,5 +1,9 @@
 local M = {}
 
+-- =============================
+-- Git Component
+-- =============================
+
 local branch_cache = {}
 
 local function get_git_branch(bufnr)
@@ -41,6 +45,14 @@ local function get_git_branch(bufnr)
     return branch_cache[bufnr]
 end
 
+function M.git()
+    local branch = get_git_branch(0)
+    if branch == "" then
+        return "[No git branch]"
+    end
+    return "  " .. branch .. " "
+end
+
 -- =============================
 -- Mode
 -- =============================
@@ -60,6 +72,29 @@ function M.mode()
     }
 
     return modes[mode] or (" " .. mode)
+end
+
+-- =============================
+-- File name
+-- =============================
+
+function M.filename()
+    local bt = vim.bo.buftype
+    local name = vim.api.nvim_buf_get_name(0)
+
+    if bt == "help" then
+        return " HELP"
+    end
+
+    if bt == "quickfix" then
+        return " QUICKFIX"
+    end
+
+    if name == "" then
+        return " [No Name]"
+    end
+
+    return " " .. vim.fn.fnamemodify(name, ":.") .. " "
 end
 
 -- =============================
@@ -137,62 +172,30 @@ function M.filesize()
 end
 
 -- =============================
--- Git Component
+-- LSP
 -- =============================
 
-function M.git()
-    local branch = get_git_branch(0)
-    if branch == "" then
-        return ""
+local lsp_status = {
+    active = false,
+    name = "",
+}
+
+function M.lsp()
+    if lsp_status.active and lsp_status.name ~= "" then
+        return "  " .. lsp_status.name .. " "
     end
-    return "  " .. branch .. " "
+
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
+    if #clients > 0 then
+        return "  " .. clients[1].name .. " "
+    end
+
+    return ""
 end
 
 -- =============================
 -- Setup
 -- =============================
---
-
-local function get_hl(name)
-    return vim.api.nvim_get_hl(0, { name = name, link = false }) or {}
-end
-
-local function set_statusline_colors()
-    local normal = get_hl("Normal")
-    local statusline = get_hl("StatusLine")
-    local statement = get_hl("Statement")
-    local string = get_hl("String")
-    local func = get_hl("Function")
-    local type_hl = get_hl("Type")
-
-    local bg = statusline.bg or normal.bg
-    local fg = statusline.fg or normal.fg
-
-    vim.api.nvim_set_hl(0, "SLMode", {
-        fg = bg,
-        bg = statement.fg,
-    })
-
-    vim.api.nvim_set_hl(0, "SLGit", {
-        fg = bg,
-        bg = string.fg,
-    })
-
-    vim.api.nvim_set_hl(0, "SLFile", {
-        fg = bg,
-        bg = func.fg,
-    })
-
-    vim.api.nvim_set_hl(0, "SLRight", {
-        fg = bg,
-        bg = type_hl.fg,
-    })
-
-    vim.api.nvim_set_hl(0, "SLFill", {
-        fg = fg,
-        bg = bg,
-    })
-end
 
 function M.setup()
     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "DirChanged", "FocusGained" }, {
@@ -201,27 +204,37 @@ function M.setup()
         end,
     })
 
-    set_statusline_colors()
-
-    vim.api.nvim_create_autocmd("ColorScheme", {
-        callback = set_statusline_colors,
+    vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if client then
+                lsp_status.active = true
+                lsp_status.name = client.name
+                vim.cmd("redrawstatus")
+            end
+        end,
     })
 
-    vim.api.nvim_set_hl(0, "StatusLineBold", { bold = true })
+    vim.api.nvim_create_autocmd("LspDetach", {
+        callback = function()
+            lsp_status.active = false
+            lsp_status.name = ""
+            vim.cmd("redrawstatus")
+        end,
+    })
 
     vim.o.statusline = table.concat({
-        "%#SLFile#",
         " %{v:lua.require'config.status-line'.mode()} ",
         "",
-        " %f %h%m%r ",
-        "%#SLGit#",
         "%{v:lua.require'config.status-line'.git()}",
         "",
-        " %{v:lua.require'config.status-line'.filetype()} ",
+        "%{v:lua.require'config.status-line'.filename()}",
+        -- "",
+        -- " %{v:lua.require'config.status-line'.filetype()} ",
         "",
-        "%{v:lua.require'config.status-line'.filesize()}",
-        "%#SLFill#",
+        "%{v:lua.require'config.status-line'.lsp()}",
         "%=",
+        "%{v:lua.require'config.status-line'.filesize()}",
         " %l:%c %P ",
     })
 end
