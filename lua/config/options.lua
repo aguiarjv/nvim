@@ -39,6 +39,7 @@ vim.g.trouble_lualine = true
 
 local opt = vim.opt
 
+opt.autoread = true -- auto-reload changes if outside of neovim
 opt.autowrite = true -- Enable auto write
 -- only set clipboard if not in ssh, to make sure the OSC 52
 -- integration works automatically.
@@ -81,7 +82,7 @@ opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "glob
 opt.shiftround = true -- Round indent
 opt.shiftwidth = 4 -- Size of an indent
 opt.shortmess:append({ W = true, I = true, c = true, C = true })
-opt.showmode = true -- Dont show mode since we have a statusline
+opt.showmode = false -- Dont show mode since we have a statusline
 opt.sidescrolloff = 8 -- Columns of context
 opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
 opt.smartcase = true -- Don't ignore case with capitals
@@ -94,6 +95,13 @@ opt.splitright = true -- Put new windows right of current
 opt.swapfile = false
 opt.termguicolors = true -- True color support
 opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
+local undodir = vim.fn.expand("~/.vim/undodir")
+if
+    vim.fn.isdirectory(undodir) == 0 -- create undodir if nonexistent
+then
+    vim.fn.mkdir(undodir, "p")
+end
+opt.undodir = undodir
 opt.undofile = true
 opt.undolevels = 10000
 opt.updatetime = 200 -- Save swap file and trigger CursorHold

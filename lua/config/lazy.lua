@@ -19,6 +19,7 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 require("config.options")
 require("config.keymaps")
+require("config.status-line")
 
 -- Setup lazy.nvim
 require("lazy").setup({
