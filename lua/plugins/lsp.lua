@@ -8,6 +8,12 @@ return {
                 enabled = true,
                 settings = {
                     format = false,
+                    workingDirectories = {
+                        "live-plugins",
+                        "liverig",
+                        "live",
+                        "webapp",
+                    },
                 },
             },
         },

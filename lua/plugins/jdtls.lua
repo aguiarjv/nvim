@@ -3,8 +3,8 @@ return {
     opts = {
         jdtls = function(opts)
             -- Setting java executable path
-            local home = os.getenv("HOME")
-            local java_home = home .. "/jdk/jdk-23.0.2"
+            local home = "/usr/lib/jvm"
+            local java_home = home .. "/java-21-openjdk-amd64"
             local java_executable = java_home .. "/bin/java"
 
             -- The opts.cmd list will be passed as arguments to a jdtls.py script inside the mason/packages/jdtls/bin directory
@@ -20,7 +20,7 @@ return {
             opts.settings.java.configuration = {
                 runtimes = {
                     {
-                        name = "JavaSE-23",
+                        name = "JavaSE-21",
                         path = java_home,
                         default = true,
                     },

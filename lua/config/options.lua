@@ -50,3 +50,7 @@ vim.o.spell = false
 vim.g.snacks_animate = false
 
 vim.opt.synmaxcol = 300 -- Limit syntax highlighting to first 300 columns
+
+vim.opt.directory = { "/home/joao-aguiar/.local/share/nvim/swap" }
+vim.opt.undofile = true
+vim.opt.undodir = { "/home/joao-aguiar/.local/share/nvim/undo" }
