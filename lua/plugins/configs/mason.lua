@@ -12,6 +12,7 @@ return {
             "prettierd",
             "prettier",
             "clang-format",
+            "google-java-format",
         },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}

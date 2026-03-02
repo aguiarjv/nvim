@@ -25,6 +25,7 @@ return {
             javascript = { "prettierd", "prettier", stop_after_first = true },
             c = { "clang-format" },
             cpp = { "clang-format" },
+            java = { "google-java-format" },
         },
         -- Set default options
         default_format_opts = {
@@ -39,6 +40,9 @@ return {
             },
             ["clang-format"] = {
                 args = '--style="{BasedOnStyle: llvm, IndentWidth: 4}"',
+            },
+            ["google-java-format"] = {
+                append_args = { "--aosp" }, -- aosp flag uses another style that uses 4 spaces
             },
         },
     },

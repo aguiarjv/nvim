@@ -71,7 +71,7 @@ function M.get_config()
                 eclipse = { downloadSources = true },
                 maven = { downloadSources = true },
                 references = { includeDecompiledSources = true },
-                format = { enabled = true },
+                format = { enabled = false },
             },
         },
     }
