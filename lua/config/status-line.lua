@@ -160,7 +160,7 @@ end
 function M.lsp()
     local clients = vim.lsp.get_clients({ bufnr = 0 })
     if #clients == 0 then
-        return ""
+        return "[No LSP]" .. " "
     end
 
     local names = {}
