@@ -50,6 +50,10 @@ return {
 
         -- Configure and enable each LSP server
         for name, config in pairs(servers) do
+            if name == "jdtls" then -- not configuring jdtls using vim.lsp
+                goto continue
+            end
+
             if config == true then
                 config = {}
             end
@@ -70,6 +74,8 @@ return {
             if not vim.lsp.get_clients({ name = name })[1] then
                 vim.lsp.enable(name)
             end
+
+            ::continue::
         end
 
         -- On attach

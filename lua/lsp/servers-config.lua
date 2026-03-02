@@ -7,4 +7,5 @@ return {
     clangd = require("lsp.configs.clangd"),
     vtsls = require("lsp.configs.vtsls"),
     tailwindcss = require("lsp.configs.tailwindcss"),
+    jdtls = {}, -- mason will install jdtls but vim.lsp won't use it
 }

@@ -4,5 +4,6 @@ return {
     },
     setup = function()
         require("dap.configs.clangd").setup()
+        require("dap.configs.jdtls").setup()
     end,
 }
