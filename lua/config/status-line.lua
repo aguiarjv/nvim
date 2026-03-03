@@ -164,11 +164,28 @@ function M.lsp()
     end
 
     local names = {}
+    local copilot_enabled = false
     for _, client in ipairs(clients) do
-        table.insert(names, client.name)
+        if client.name == "GitHub Copilot" then
+            copilot_enabled = true
+        else
+            table.insert(names, client.name)
+        end
     end
 
-    return "  " .. table.concat(names, ", ") .. " "
+    local lsp_text = ""
+    if #names > 0 then
+        lsp_text = "  " .. names[1]
+        if #names > 1 then
+            lsp_text = lsp_text .. " (+" .. (#names - 1) .. ")"
+        end
+
+        if copilot_enabled then
+            lsp_text = lsp_text .. " • " .. "\u{f4b8}"
+        end
+    end
+
+    return lsp_text .. " • "
 end
 
 -- =============================
@@ -239,7 +256,6 @@ function M.setup()
         -- " %{v:lua.sl.filetype()} ",
         "%=",
         "%{v:lua.sl.lsp()}",
-        "•",
         "%{v:lua.sl.filesize()}",
         "•",
         " %l:%c %P ",
