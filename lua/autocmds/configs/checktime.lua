@@ -1,7 +1,7 @@
 local M = {}
 
-function M.setup(group_name)
-    local group = vim.api.nvim_create_augroup(group_name or "CustomAutoCmds", { clear = true })
+function M.setup(main_group)
+    local group = main_group or vim.api.nvim_create_augroup("CustomAutoCmds", { clear = true })
 
     vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
         group = group,
