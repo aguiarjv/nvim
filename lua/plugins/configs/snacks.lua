@@ -12,7 +12,9 @@ return {
                 },
             },
             scope = { enabled = true },
-            explorer = {},
+            explorer = {
+                trash = false,
+            },
             picker = {
                 sources = {
                     explorer = {},
