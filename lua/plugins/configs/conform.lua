@@ -22,7 +22,8 @@ return {
         formatters_by_ft = {
             lua = { "stylua" },
             python = { "isort", "black" },
-            javascript = { "prettierd", "prettier", stop_after_first = true },
+            javascript = { "eslint_d", "prettierd", "prettier", stop_after_first = true },
+            typescript = { "eslint_d", "prettierd", "prettier", stop_after_first = true },
             c = { "clang-format" },
             cpp = { "clang-format" },
             --java = { "google-java-format" },

@@ -9,6 +9,7 @@ return {
             "shfmt",
             "isort",
             "black",
+            "eslint_d",
             "prettierd",
             "prettier",
             "clang-format",
