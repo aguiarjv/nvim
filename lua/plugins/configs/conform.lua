@@ -31,6 +31,7 @@ return {
         },
         -- Set default options
         default_format_opts = {
+            async = true,
             lsp_format = "fallback",
         },
         -- Set up format-on-save
