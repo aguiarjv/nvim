@@ -18,6 +18,7 @@ return {
     ---@module "conform"
     ---@type conform.setupOpts
     opts = {
+        async = true,
         -- Define your formatters
         formatters_by_ft = {
             lua = { "stylua" },
