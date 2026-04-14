@@ -18,7 +18,6 @@ return {
     ---@module "conform"
     ---@type conform.setupOpts
     opts = {
-        async = true,
         -- Define your formatters
         formatters_by_ft = {
             lua = { "stylua" },
@@ -35,7 +34,7 @@ return {
             lsp_format = "fallback",
         },
         -- Set up format-on-save
-        format_on_save = { timeout_ms = 500 },
+        format_on_save = { async = true, timeout_ms = 500 },
         -- Customize formatters
         formatters = {
             shfmt = {
