@@ -7,7 +7,7 @@ return {
         {
             "<leader>cF",
             function()
-                require("conform").format({ formatters = { "injected" }, timeout_ms = 3000 })
+                require("conform").format({ async = true, formatters = { "injected" }, timeout_ms = 3000 })
             end,
             mode = { "n", "x" },
             desc = "Format Injected Langs",
