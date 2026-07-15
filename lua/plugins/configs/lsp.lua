@@ -15,9 +15,6 @@ return {
             },
         },
         { "Bilal2453/luvit-meta", lazy = true },
-        "mason.nvim",
-        "WhoIsSethDaniel/mason-tool-installer.nvim",
-        { "mason-org/mason-lspconfig.nvim", config = function() end },
 
         -- Autoformatting
         "stevearc/conform.nvim",
@@ -27,26 +24,54 @@ return {
     },
     config = function()
         local servers = require("lsp.servers-config")
-
-        local servers_to_install = vim.tbl_filter(function(key)
-            local t = servers[key]
-            if type(t) == "table" then
-                return not t.manual_install
-            else
-                return t
-            end
-        end, vim.tbl_keys(servers))
-
-        require("mason").setup()
-        local ensure_installed = {
-            "stylua",
-            "lua_ls",
-        }
-
-        vim.list_extend(ensure_installed, servers_to_install)
-        require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
         local capabilities = require("lsp.capabilities").get()
+        local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+        local servers_to_enable = {}
+        local deferred_servers = {}
+
+        local current_path = vim.env.PATH or ""
+        if not current_path:find(mason_bin, 1, true) then
+            vim.env.PATH = current_path == "" and mason_bin or mason_bin .. ":" .. current_path
+        end
+
+        local function start_config(bufnr, name)
+            if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
+                return
+            end
+
+            if vim.lsp.get_clients({ bufnr = bufnr, name = name })[1] then
+                return
+            end
+
+            local config = vim.deepcopy(vim.lsp.config[name])
+            if not config then
+                return
+            end
+
+            if config.filetypes and not vim.tbl_contains(config.filetypes, vim.bo[bufnr].filetype) then
+                return
+            end
+
+            local opts = {
+                bufnr = bufnr,
+                reuse_client = config.reuse_client,
+                _root_markers = config.root_markers,
+                silent = true,
+            }
+
+            if type(config.root_dir) == "function" then
+                config.root_dir(bufnr, function(root_dir)
+                    config.root_dir = root_dir
+                    vim.schedule(function()
+                        if vim.api.nvim_buf_is_valid(bufnr) then
+                            vim.lsp.start(config, opts)
+                        end
+                    end)
+                end)
+            else
+                vim.lsp.start(config, opts)
+            end
+        end
 
         -- Configure and enable each LSP server
         for name, config in pairs(servers) do
@@ -65,17 +90,54 @@ return {
 
             -- Extendind existing config
             local lsp_config = vim.tbl_deep_extend("force", base_config, config or {})
+            local defer_start = lsp_config.defer_start
 
-            -- Remove manual_install flag as it's not an LSP config field
+            -- Remove local-only flags as they are not LSP config fields
             lsp_config.manual_install = nil
+            lsp_config.defer_start = nil
 
             vim.lsp.config(name, lsp_config)
 
-            if not vim.lsp.get_clients({ name = name })[1] then
-                vim.lsp.enable(name)
+            if defer_start then
+                local resolved_config = vim.lsp.config[name]
+                deferred_servers[name] = {
+                    delay = defer_start,
+                    filetypes = resolved_config and resolved_config.filetypes or {},
+                }
+            else
+                table.insert(servers_to_enable, name)
             end
 
             ::continue::
+        end
+
+        if #servers_to_enable > 0 then
+            vim.lsp.enable(servers_to_enable)
+        end
+
+        local deferred_filetypes = {}
+        for _, server in pairs(deferred_servers) do
+            for _, filetype in ipairs(server.filetypes) do
+                deferred_filetypes[filetype] = true
+            end
+        end
+
+        if next(deferred_filetypes) then
+            vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("UserDeferredLspStart", { clear = true }),
+                pattern = vim.tbl_keys(deferred_filetypes),
+                callback = function(args)
+                    local filetype = vim.bo[args.buf].filetype
+
+                    for name, server in pairs(deferred_servers) do
+                        if vim.tbl_contains(server.filetypes, filetype) then
+                            vim.defer_fn(function()
+                                start_config(args.buf, name)
+                            end, server.delay)
+                        end
+                    end
+                end,
+            })
         end
 
         -- On attach

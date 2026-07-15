@@ -39,8 +39,21 @@ return {
 
         vim.api.nvim_create_autocmd("FileType", {
             callback = function(args)
-                vim.opt.foldmethod = "expr"
-                vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                local filetype = vim.bo[args.buf].filetype
+                local disable_folds = {
+                    javascript = true,
+                    javascriptreact = true,
+                    typescript = true,
+                    typescriptreact = true,
+                }
+
+                if disable_folds[filetype] then
+                    vim.opt_local.foldmethod = "manual"
+                else
+                    vim.opt_local.foldmethod = "expr"
+                    vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                end
+
                 pcall(vim.treesitter.start, args.buf)
             end,
         })

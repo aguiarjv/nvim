@@ -14,6 +14,17 @@ return {
             "prettier",
             "clang-format",
             "google-java-format",
+
+            -- LSP servers
+            "bash-language-server",
+            "pyright",
+            "lua-language-server",
+            "json-lsp",
+            "clangd",
+            "eslint-lsp",
+            "vtsls",
+            "tailwindcss-language-server",
+            "jdtls",
         },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
